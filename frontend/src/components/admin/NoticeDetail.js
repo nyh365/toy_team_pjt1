@@ -14,7 +14,7 @@ const NoticeDetail = () => {
   function getDetail() {
     axios({
       url: `http://i8a804.p.ssafy.io:8050/notice/${params.noticeId}`,
-      methods: "GET",
+      methods: 'GET',
     })
       .then((res) => {
         setTitle(res.data.notice.noticeTitle);
@@ -22,7 +22,7 @@ const NoticeDetail = () => {
         setTime(res.data.notice.createdTime.substr(0, 10));
       })
       .catch((err) => {
-        console.log(err, "공지사항 디테일 에러");
+        console.log(err, '공지사항 디테일 에러');
       });
   }
 
@@ -31,8 +31,8 @@ const NoticeDetail = () => {
     console.log(content);
   }, [update]);
 
-  const [inputTitle, setInputTitle] = useState("");
-  const [inputContent, setInputContent] = useState("");
+  const [inputTitle, setInputTitle] = useState('');
+  const [inputContent, setInputContent] = useState('');
 
   useEffect(() => {
     setInputTitle(title);
@@ -42,31 +42,31 @@ const NoticeDetail = () => {
   const navigate = useNavigate();
 
   function list() {
-    navigate("/admin/notice");
+    navigate('/admin/notice');
   }
 
   function goToUpdate() {
-    setUpdate("1");
+    setUpdate('1');
   }
 
   function back() {
-    setUpdate("");
+    setUpdate('');
   }
 
   function noticeDelete() {
     axios({
-      method: "DELETE",
+      method: 'DELETE',
       url: `http://i8a804.p.ssafy.io:8050/notice/${params.noticeId}/`,
       data: {
         noticeId: params.noticeId,
       },
     })
       .then((res) => {
-        alert("삭제가 완료되었습니다.");
-        navigate("/admin/notice");
+        alert('삭제가 완료되었습니다.');
+        navigate('/admin/notice');
       })
       .catch((err) => {
-        console.log("notice 삭제 에러");
+        console.log('notice 삭제 에러');
       });
   }
 
@@ -80,13 +80,13 @@ const NoticeDetail = () => {
   }
 
   function updateConfirm() {
-    if (inputTitle.trim() === "") {
-      alert("제목을 입력해주세요");
-    } else if (inputContent.trim() === "") {
-      alert("내용을 입력해주세요");
+    if (inputTitle.trim() === '') {
+      alert('제목을 입력해주세요');
+    } else if (inputContent.trim() === '') {
+      alert('내용을 입력해주세요');
     } else {
       axios({
-        method: "put",
+        method: 'put',
         url: `http://i8a804.p.ssafy.io:8050/notice/${params.noticeId}`,
         data: {
           noticeId: params.noticeId,
@@ -99,7 +99,7 @@ const NoticeDetail = () => {
           setUpdate("");
         })
         .catch((err) => {
-          console.log("공지사항 수정 에러", err);
+          console.log('공지사항 수정 에러', err);
         });
     }
   }
@@ -193,9 +193,7 @@ const NoticeDetail = () => {
           </div>
         )}
       </div>
-      <div
-        style={{ justifyContent: "left", display: "flex", marginBottom: "2%" }}
-      >
+      <div style={{ justifyContent: 'left', display: 'flex', marginBottom: '2%' }}>
         <button className="toList" onClick={list}>
           목록으로
         </button>
