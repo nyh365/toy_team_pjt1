@@ -1,6 +1,7 @@
 package com.ssafy.kkini.service;
 
 import com.ssafy.kkini.dto.UserCreateFormDto;
+import com.ssafy.kkini.dto.UserInfoDto;
 import com.ssafy.kkini.entity.User;
 import com.ssafy.kkini.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,15 @@ public class UserService {
     @Transactional
     public User createUser(UserCreateFormDto userCreateFormDto) {
         return userRepository.save(userCreateFormDto.toEntity());
+    }
+
+    @Transactional
+    public User updatePasswordByEmail(String email, String newPassword) {
+        User user = userRepository.findByUserEmail(email);
+        UserInfoDto userInfoDto = new UserInfoDto(user);
+        userInfoDto.setUserPassword(newPassword);
+
+        return userRepository.save(userInfoDto.toEntity());
     }
 
 

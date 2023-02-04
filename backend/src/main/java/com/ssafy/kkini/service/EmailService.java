@@ -5,6 +5,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -40,5 +41,18 @@ public class EmailService {
         String text = "이메일 인증코드는 " + code + " 입니다.";
 
         this.sendEmail(email, subject, text);
+    }
+
+    public void sendEmailPasswordCode(String email, String passwordCode) {
+        String subject = "[우리끼니] 비밀번호를 변경해주세요.";
+
+        StringBuilder sb = new StringBuilder();
+        //서버주소
+        sb.append("<a href='http://localhost:8040/user/password?userEmail=");
+        sb.append(email);
+        sb.append("&passwordCodeContent=");
+        sb.append(passwordCode);
+        sb.append("'>비밀번호 변경페이지</a>");
+        this.sendEmail(email, subject, sb.toString(), true);
     }
 }
