@@ -116,8 +116,6 @@ class RoomDetail extends Component {
 
     this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
     this.onbeforeunload = this.onbeforeunload.bind(this);
-    // this.getUserList = this.getUserList.bind(this);
-    // this.userList = this.userList.bind(this);
     this.listToggle = this.listToggle.bind(this);
 
     this.handleChange = this.handleChange.bind(this);
@@ -128,7 +126,6 @@ class RoomDetail extends Component {
     this.voteComplete = this.voteComplete.bind(this);
     this.agreeVote = this.agreeVote.bind(this);
     this.disagreeVote = this.disagreeVote.bind(this);
-    this.userList = this.userList.bind(this);
   }
 
   //라이프 사이클
@@ -442,16 +439,17 @@ class RoomDetail extends Component {
 
     const mySession = this.state.session;
 
-    mySession
-      .signal({
-        data: `${this.state.myUserName},${this.state.message}`, //signal의 실질적 메시지
-        to: [], //Session.on('signal')을 subscribe한 참여자들에게 전달됨. []거나 undefined일 경우, 전체 참여자에게 전달됨
-        type: 'chat', //signal 타입. Session.on('signal:type') 이벤트를 subscribe한 참여자들에게 전달
-      })
-      .then(() => {})
-      .catch((error) => {
-        console.error(error);
-      });
+    if (this.state.message !== '')
+      mySession
+        .signal({
+          data: `${this.state.myUserName},${this.state.message}`, //signal의 실질적 메시지
+          to: [], //Session.on('signal')을 subscribe한 참여자들에게 전달됨. []거나 undefined일 경우, 전체 참여자에게 전달됨
+          type: 'chat', //signal 타입. Session.on('signal:type') 이벤트를 subscribe한 참여자들에게 전달
+        })
+        .then(() => {})
+        .catch((error) => {
+          console.error(error);
+        });
     this.scrollToBottom();
     //message창 초기화
     this.setState({
@@ -474,17 +472,17 @@ class RoomDetail extends Component {
       });
 
       const mySession = this.state.session;
-
-      mySession
-        .signal({
-          data: `${this.state.myUserName},${this.state.message}`, //signal의 실질적 메시지
-          to: [], //Session.on('signal')을 subscribe한 참여자들에게 전달됨. []거나 undefined일 경우, 전체 참여자에게 전달됨
-          type: 'chat', //signal 타입. Session.on('signal:type') 이벤트를 subscribe한 참여자들에게 전달
-        })
-        .then(() => {})
-        .catch((error) => {
-          console.error(error);
-        });
+      if (this.state.message !== '')
+        mySession
+          .signal({
+            data: `${this.state.myUserName},${this.state.message}`, //signal의 실질적 메시지
+            to: [], //Session.on('signal')을 subscribe한 참여자들에게 전달됨. []거나 undefined일 경우, 전체 참여자에게 전달됨
+            type: 'chat', //signal 타입. Session.on('signal:type') 이벤트를 subscribe한 참여자들에게 전달
+          })
+          .then(() => {})
+          .catch((error) => {
+            console.error(error);
+          });
       this.scrollToBottom();
       //message창 초기화
       this.setState({
@@ -868,45 +866,42 @@ class RoomDetail extends Component {
               <TabPanel value="2" sx={{ background: '#ffd4c3' }}>
                 <div className={`${styles.chatWrapper} ${styles.chatbox__active}`}>
                   <div className={styles.chatHeader}>
-                    <h2>참여자 목록</h2>
+                    <h2 style={{ marginBottom: '2%' }}>참여자 목록</h2>
                   </div>
                   <div className={styles.userListBox}>
-                    <ul>
-                      {this.state.users.map((user, index) => {
-                        return (
-                          <li>
-                            <Box>
-                              <Stack direction="row" spacing={3}>
-                                <div>{user.userNickname}</div>
-
-                                <Button
-                                  name="report"
-                                  value={user.userId}
-                                  variant="contained"
-                                  color="error"
-                                  size="small"
-                                  onClick={this.openModal}
-                                >
-                                  신고
-                                </Button>
-                                <Button
-                                  onClick={() =>
-                                    this.startVote({ userId: user.userId, userNickname: user.userNickname })
-                                  }
-                                  name="vote"
-                                  value={user.userId}
-                                  variant="contained"
-                                  color="error"
-                                  size="small"
-                                >
-                                  강퇴
-                                </Button>
-                              </Stack>
-                            </Box>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                    {this.state.users.map((user, index) => {
+                      return (
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            width: '90%',
+                            margin: '2%',
+                          }}
+                        >
+                          <div style={{ textOverflow: 'ellipsis' }}>{user.userNickname}</div>
+                          <div style={{ display: 'flex' }}>
+                            <button
+                              name="report"
+                              value={user.userId}
+                              onClick={this.openModal}
+                              className={styles.listBtn}
+                            >
+                              신고
+                            </button>
+                            <button
+                              onClick={() => this.startVote({ userId: user.userId, userNickname: user.userNickname })}
+                              name="vote"
+                              value={user.userId}
+                              className={styles.listBtn}
+                              style={{ backgroundColor: '#FF8D89' }}
+                            >
+                              강퇴
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </TabPanel>
