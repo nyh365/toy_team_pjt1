@@ -209,31 +209,30 @@ class RoomDetail extends Component {
           );
 
           const newSubscribers = this.state.subscribers;
+          newSubscribers.push(newSubscriber);
 
-          if (
-            newSubscribers.filter((sub) => sub.userId === JSON.parse(newSubscriber.stream.connection.data).userId) ===
-            []
-          )
-            newSubscribers.push(newSubscriber);
+          // if (
+          //   newSubscribers.filter((sub) => sub.userId === JSON.parse(newSubscriber.stream.connection.data).userId) ===
+          //   []
+          // )
 
           const newUser = JSON.parse(newSubscriber.stream.connection.data);
           const newUsers = this.state.users;
-          // newUsers.push(newUser);
-          if (newUsers.filter((user) => user.userId === newUser.userId) === []) newUsers.push(newUser);
+          newUsers.push(newUser);
+          // if (newUsers.filter((user) => user.userId === newUser.userId) === []) newUsers.push(newUser);
 
           //중복 제거
-          // const usersSet = new Set(newUsers);
-          // const subscribersSet = new Set(newSubscribers);
-          // const users = [...usersSet];
-          // const subscribers = [...subscribersSet];
+
+          const users = [...new Set(newUsers)];
+          const subscribers = [...new Set(newSubscribers)];
 
           console.log('user');
           console.log(newUsers);
           console.log('subscriber');
           console.log(newSubscribers);
           this.setState({
-            users: newUsers,
-            subscribers: newSubscribers,
+            users: users,
+            subscribers: subscribers,
           });
         });
 
@@ -1047,8 +1046,8 @@ class RoomDetail extends Component {
                   <h2 style={{ marginBottom: '2%' }}>참여자 목록</h2>
                 </div>
                 <div className={`${styles.userListBox} ${styles.scroll}`}>
-                  {this.state.subscribers.map((sub) => {
-                    const user = JSON.parse(sub.stream.connection.data);
+                  {this.state.users.map((user) => {
+                    // const user = JSON.parse(sub.stream.connection.data);
                     if (user === 'none') {
                       // console.log(`목록 ${user}`);
                       return <div style={{ display: 'none' }}></div>;
